@@ -1,7 +1,7 @@
 # STM_DCMotor_Encoder
 How to control DC motor and AB Encoder using NUCLEO-H743ZI2 board.
 
-- Hardware:  NUCLEO-H743ZI2 board, DC motor, AB Encoder, Transistor(NPN 2N3904L x 4).
+- Hardware:  NUCLEO-H743ZI2 board, [DC motor with AB Encoder](https://www.ruten.com.tw/item/show?21832476641790), Transistor(NPN 2N3904L x 4).
 
 - Software: [STM32CubeMX](https://www.st.com/en/development-tools/stm32cubemx.html) and [Keil uVision5](https://www2.keil.com/mdk5/uvision/).
 
