@@ -17,9 +17,21 @@ How to control DC motor and AB Encoder using NUCLEO-H743ZI2 board.
 
 ------
 
+### DC Motor and AB Encoder
+
+![image](https://github.com/qaz9517532846/STM_DCMotor_Encoder/blob/main/circuit/DCMotor.png)
+
+------
+
 ### Circuit
 
 ![image](https://github.com/qaz9517532846/STM_DCMotor_Encoder/blob/main/circuit/circuit.png)
+
+------
+
+### PWM Control and AB Encoder process
+
+![image](https://github.com/qaz9517532846/STM_DCMotor_Encoder/blob/main/circuit/PWM_ENCODER.png)
 
 ------
 ### Reference
