@@ -24,9 +24,11 @@ How to control DC motor and AB Encoder using NUCLEO-H743ZI2 board.
 ------
 ### Reference
 
-[1]. Servo motor with STM32. https://controllerstech.com/servo-motor-with-stm32/
+[1]. PWM (Pulse Width Mod) in STM32. https://controllerstech.com/pwm-in-stm32/
 
-[2]. STM32H743ZI MCU. https://www.st.com/en/evaluation-tools/nucleo-h743zi.html
+[2]. Incremental ENCODER and STM32. https://controllerstech.com/incremental-encoder-with-stm32/
+
+[3]. STM32H743ZI MCU. https://www.st.com/en/evaluation-tools/nucleo-h743zi.html
 
 ------
 
