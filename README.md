@@ -34,6 +34,29 @@ How to control DC motor and AB Encoder using NUCLEO-H743ZI2 board.
 ![image](https://github.com/qaz9517532846/STM_DCMotor_Encoder/blob/main/circuit/PWM_ENCODER.png)
 
 ------
+
+### Send data using serial communication.
+
+## encoder counter
+
+| Address        | Address 0                  | Address 1                  |
+| ---            | ---                        | ---                        |
+| data type      | UINT8                      | UINT8                      |
+| ---            | ---                        | ---                           |
+| data           | encoder cnt hightbyte      | encoder cnt lowbyte        |
+
+------
+
+### Received data using serial communication.
+
+## encoder counter
+
+| Address        | Address 0                  | Address 1                  | Address 2|
+| ---            | ---                        | ---                        | ---                           |
+| data type      | UINT8                      | UINT8                      | UINT8                         |
+| ---            | ---                        | ---                        | ---                           |
+| data           | direction(0 or 1)          | duty hightbyte (0 - 100)   | duty lowbyte (0 - 99) * 0.01  |
+
 ### Reference
 
 [1]. PWM (Pulse Width Mod) in STM32. https://controllerstech.com/pwm-in-stm32/
