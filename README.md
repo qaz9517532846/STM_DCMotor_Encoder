@@ -42,7 +42,6 @@ How to control DC motor and AB Encoder using NUCLEO-H743ZI2 board.
 | Address        | Address 0                  | Address 1                  |
 | ---            | ---                        | ---                        |
 | data type      | UINT8                      | UINT8                      |
-| ---            | ---                        | ---                           |
 | data           | encoder cnt hightbyte      | encoder cnt lowbyte        |
 
 ------
@@ -54,7 +53,6 @@ How to control DC motor and AB Encoder using NUCLEO-H743ZI2 board.
 | Address        | Address 0                  | Address 1                  | Address 2|
 | ---            | ---                        | ---                        | ---                           |
 | data type      | UINT8                      | UINT8                      | UINT8                         |
-| ---            | ---                        | ---                        | ---                           |
 | data           | direction(0 or 1)          | duty hightbyte (0 - 100)   | duty lowbyte (0 - 99) * 0.01  |
 
 ### Reference
