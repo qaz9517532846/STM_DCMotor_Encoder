@@ -89,23 +89,21 @@ static void MX_TIM4_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USB_OTG_FS_PCD_Init(void);
 
-int charToInt(uint8_t data);
-uint8_t intToChar(int data);
-void encoder_tx(int data);
+void encoder_tx(uint16_t data);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-int direction = 0; //0 is cw, 1 is ccw;
+uint8_t direction = 0; //0 is cw, 1 is ccw;
 float duty;
 float duty_cw = 0;
 float duty_ccw = 0;
 
-int counter = 0;
-int encoder_counter = 0;
-int old_encoder_counter = 0;
+uint16_t counter = 0;
+uint16_t encoder_counter = 0;
+uint16_t old_encoder_counter = 0;
 
 int millis = 0;
 int old_millis = 0;
@@ -113,8 +111,8 @@ int old_millis = 0;
 float motor_vel;
 int delta_millis = 0;
 
-uint8_t duty_data[8];
-uint8_t encoder_data[10]; 
+uint8_t duty_data[3];
+uint8_t encoder_data[2];
 /* USER CODE END 0 */
 
 /**
@@ -151,7 +149,7 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USB_OTG_FS_PCD_Init();
   /* USER CODE BEGIN 2 */
-	HAL_UART_Receive_IT (&huart3, duty_data, 8);
+	HAL_UART_Receive_IT (&huart3, duty_data, 3);
 	//HAL_UART_Receive_DMA(&huart3, rx_data, 10);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1); // CW PWM Start
 	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1); // CCW PWM Start
@@ -165,22 +163,16 @@ int main(void)
 		/* USER CODE END WHILE */
 		//millis = HAL_GetTick();
 		//delta_millis = millis - old_millis;
-		HAL_UART_Receive_IT(&huart3, (uint8_t *)duty_data, 8);
-		duty = charToInt(duty_data[2]) * 100 + charToInt(duty_data[3]) * 10 + charToInt(duty_data[4]) * 1 + charToInt(duty_data[6]) * 0.1 + charToInt(duty_data[7]) * 0.01;
+		HAL_UART_Receive_IT(&huart3, (uint8_t *)duty_data, 3);
+		duty = duty_data[1] + duty_data[2] * 0.01;
 		
 	  if(duty > 100)
 	  {
 		  duty = 100;
 	  }
 	
-	  if(duty_data[0] == '0')
-	  {
-		  direction = 0;
-	  }
-	  else
-	  {
-		  direction = 1;
-	  }
+	  if(duty_data[0] == 0) direction = 0;
+	  else									direction = 1;
 		
 		if(direction == 0)
 		{
@@ -680,13 +672,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) //Caculate encoder pulse
 	if(GPIO_Pin == Motor_ENC_A_Pin)
 	{
 		if(HAL_GPIO_ReadPin(Motor_ENC_B_GPIO_Port, Motor_ENC_B_Pin) == 0)
-		{
 			counter++; 
-		}
 		else if(HAL_GPIO_ReadPin(Motor_ENC_B_GPIO_Port, Motor_ENC_B_Pin) == 1)
-		{
 			counter--; 
-		}
 	}
 	else
 	{
@@ -696,139 +684,32 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) //Caculate encoder pulse
 	if(GPIO_Pin == Motor_ENC_B_Pin)
 	{
 		if(HAL_GPIO_ReadPin(Motor_ENC_A_GPIO_Port, Motor_ENC_A_Pin) == 1)
-		{
 			counter++; 
-		}
 		else if(HAL_GPIO_ReadPin(Motor_ENC_A_GPIO_Port, Motor_ENC_A_Pin) == 0)
-		{
 			counter--; 
-		}
 	}
 	else
 	{
 		__NOP();
 	}
 	
-	encoder_counter = counter >> 1;
+	encoder_counter = counter;// >> 1;
 	encoder_tx(encoder_counter);
-	HAL_UART_Transmit_IT(&huart3, encoder_data, 10);
+	HAL_UART_Transmit_IT(&huart3, encoder_data, 2);
 	//motor_vel = (encoder_counter - old_encoder_counter) / delta_millis;
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	HAL_UART_Receive_IT(&huart3, (uint8_t *)duty_data, 8);
+	HAL_UART_Receive_IT(&huart3, (uint8_t *)duty_data, 3);
 }
 
-int charToInt(uint8_t data)
+void encoder_tx(uint16_t data)
 {
-	if(data == '0')
-	{
-		return 0;
-	}
-	else if(data == '1')
-	{
-		return 1;
-	}
-	else if(data == '2')
-	{
-		return 2;
-	}
-	else if(data == '3')
-	{
-		return 3;
-	}
-	else if(data == '4')
-	{
-		return 4;
-	}
-	else if(data == '5')
-	{
-		return 5;
-	}
-	else if(data == '6')
-	{
-		return 6;
-	}
-	else if(data == '7')
-	{
-		return 7;
-	}
-	else if(data == '8')
-	{
-		return 8;
-	}
-	else if(data == '9')
-	{
-		return 9;
-	}
+	encoder_data[0] = (data >> 8) & 0xFF; // Encoder data highByte 
+	encoder_data[1] = data & 0xFF; // Encoder data LowByte 
 }
 
-void encoder_tx(int data)
-{
-	if(encoder_counter > 0)
-	{
-		encoder_data[0] = '0';
-	}
-	else
-	{
-		encoder_data[0] = '1';
-	}
-	
-	encoder_data[1] = 'x';
-	encoder_data[2] = intToChar(abs((encoder_counter / 10000000)) % 10);
-	encoder_data[3] = intToChar(abs((encoder_counter / 1000000) % 10));
-	encoder_data[4] = intToChar(abs((encoder_counter / 100000) % 10));
-	encoder_data[5] = intToChar(abs((encoder_counter / 10000) % 10));
-	encoder_data[6] = intToChar(abs((encoder_counter / 1000) % 10));
-	encoder_data[7] = intToChar(abs((encoder_counter / 100) % 10));
-	encoder_data[8] = intToChar(abs((encoder_counter / 10) % 10));
-	encoder_data[9] = intToChar(abs((encoder_counter / 1) % 10));
-}
-
-uint8_t intToChar(int data)
-{
-	if(data == 0)
-	{
-		return '0';
-	}
-	else if(data == 1)
-	{
-		return '1';
-	}
-	else if(data == 2)
-	{
-		return '2';
-	}
-	else if(data == 3)
-	{
-		return '3';
-	}
-	else if(data == 4)
-	{
-		return '4';
-	}
-	else if(data == 5)
-	{
-		return '5';
-	}
-	else if(data == 6)
-	{
-		return '6';
-	}
-	else if(data == 7)
-	{
-		return '7';
-	}
-	else if(data == 8)
-	{
-		return '8';
-	}
-	else if(data == 9)
-	{
-		return '9';
-	}
-}
 /* USER CODE END 4 */
 
 /**
