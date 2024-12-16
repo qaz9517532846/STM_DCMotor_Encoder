@@ -15,12 +15,6 @@ How to control DC motor and AB Encoder using NUCLEO-H743ZI2 board.
 | Prescaler                | 72 - 1      |
 | Counter Period           | 100 - 1.    |
 
-- System Clock = 72 MHz.
-
-- Prescaler = 72 - 1.
-
-- Counter Period = 100 - 1.
-
 ------
 
 ### DC Motor and AB Encoder
