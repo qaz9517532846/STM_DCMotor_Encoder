@@ -9,6 +9,12 @@ How to control DC motor and AB Encoder using NUCLEO-H743ZI2 board.
 
 ### STM32 Setting Parameter
 
+| Item                     | Paramter    |
+| ---                      | ---         |
+| System Clock             | 72 MHz      |
+| Prescaler                | 72 - 1      |
+| Counter Period           | 100 - 1.    |
+
 - System Clock = 72 MHz.
 
 - Prescaler = 72 - 1.
@@ -37,7 +43,7 @@ How to control DC motor and AB Encoder using NUCLEO-H743ZI2 board.
 
 ### Send data using serial communication.
 
-## encoder counter
+- Encoder counter
 
 | Address        | Address 0                  | Address 1                  |
 | ---            | ---                        | ---                        |
@@ -48,7 +54,7 @@ How to control DC motor and AB Encoder using NUCLEO-H743ZI2 board.
 
 ### Received data using serial communication.
 
-## encoder counter
+- Duty
 
 | Address        | Address 0                  | Address 1                  | Address 2|
 | ---            | ---                        | ---                        | ---                           |
