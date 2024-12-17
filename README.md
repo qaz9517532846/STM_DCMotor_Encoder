@@ -55,6 +55,8 @@ How to control DC motor and AB Encoder using NUCLEO-H743ZI2 board.
 | data type      | UINT8                      | UINT8                      | UINT8                         |
 | data           | direction(0 or 1)          | duty hightbyte (0 - 100)   | duty lowbyte (0 - 99) * 0.01  |
 
+------
+
 ### Reference
 
 [1]. PWM (Pulse Width Mod) in STM32. https://controllerstech.com/pwm-in-stm32/
