@@ -153,7 +153,7 @@ int main(void)
 	//HAL_UART_Receive_DMA(&huart3, rx_data, 10);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1); // CW PWM Start
 	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1); // CCW PWM Start
-	HAL_Delay(100);
+	HAL_Delay(20);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -163,13 +163,9 @@ int main(void)
 		/* USER CODE END WHILE */
 		//millis = HAL_GetTick();
 		//delta_millis = millis - old_millis;
-		HAL_UART_Receive_IT(&huart3, (uint8_t *)duty_data, 3);
-		duty = duty_data[1] + duty_data[2] * 0.01;
+		//HAL_UART_Receive_IT(&huart3, (uint8_t *)duty_data, 3);
 		
-	  if(duty > 100)
-	  {
-		  duty = 100;
-	  }
+	  if(duty > 100)	duty = 100;
 	
 	  if(duty_data[0] == 0) direction = 0;
 	  else									direction = 1;
@@ -695,13 +691,18 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) //Caculate encoder pulse
 	
 	encoder_counter = counter;// >> 1;
 	encoder_tx(encoder_counter);
-	HAL_UART_Transmit_IT(&huart3, encoder_data, 2);
+	//HAL_UART_Transmit_IT(&huart3, encoder_data, 2);
 	//motor_vel = (encoder_counter - old_encoder_counter) / delta_millis;
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	HAL_UART_Receive_IT(&huart3, (uint8_t *)duty_data, 3);
+	if(huart->Instance == USART3)
+	{
+		HAL_UART_Receive_IT(&huart3, (uint8_t *)duty_data, 3);
+		duty = duty_data[1] + duty_data[2] * 0.01;
+		HAL_UART_Transmit_IT(&huart3, encoder_data, 2);
+	}
 }
 
 void encoder_tx(uint16_t data)
@@ -711,7 +712,6 @@ void encoder_tx(uint16_t data)
 }
 
 /* USER CODE END 4 */
-
 /**
   * @brief  This function is executed in case of error occurrence.
   * @retval None
